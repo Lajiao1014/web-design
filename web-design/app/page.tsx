@@ -1,6 +1,14 @@
+'use client'
+
 import Image from "next/image";
+import { useState } from "react"
+import Details from "@/components/Details";
 
 export default function Home() {
+
+  const [showDetails, setShowDetails] = useState(false);
+
+
   return (
     <div className="min-h-screen bg-black/10 w-screen">
       <div className="container w-screen">
@@ -37,7 +45,7 @@ export default function Home() {
                 TITLE 尊稱 *
               </label>
               <select
-                className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
               >
                 <option value="Mr.">Mr.</option>
                 <option value="Ms.">Ms.</option>
@@ -47,13 +55,13 @@ export default function Home() {
 
             <div className="flex gap-6">
               <div>
-                <label className="block ttext-gray-500 font-medium mb-2">
+                <label className="block text-gray-500 font-medium mb-2">
                   FIRST NAME 名字 *
                 </label>
                 <input
                   type="text"
                   name="first_name"
-                  className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                  className="w-[550px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:border-gray-400"
                 />
               </div>
 
@@ -64,7 +72,7 @@ export default function Home() {
                 <input
                   type="text"
                   name="first_name"
-                  className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                  className="w-[550px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:border-gray-400"
                 />
               </div>
             </div>
@@ -76,17 +84,16 @@ export default function Home() {
                 </label>
                 <div className="flex gap-3">
                   <select
-                    className="w-[100px] bg-neutral-800 text-gray-300 p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                    className="w-[100px] bg-neutral-800 text-gray-300 p-1 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
                   >
-                    <option value="HK +852">HK +852</option>
-                    <option value="Macau +853">Macau +853</option>
+                    <option value="HK +852" >HK +852</option>
+                    <option value="Macau +853" >Macau +853</option>
                     <option value="China +86">China +86</option>
                   </select>
                   <input
                     type="text"
                     name="first_name"
-                    placeholder="First name"
-                    className="w-[438px] bg-neutral-800 text-gray-300 p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                    className="w-[438px] bg-neutral-800 text-gray-300 p-1 rounded border border-neutral-700 focus:outline-none focus:border-gray-400"
                   />
                 </div>
               </div>
@@ -97,15 +104,20 @@ export default function Home() {
                 <input
                   type="text"
                   name="first_name"
-                  className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                  className="w-[550px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:focus:border-gray-400"
                 />
               </div>
             </div>
             <div className="py-1">
               <input
                 type="checkbox"
-                className="mr-4" />Additional Guest Details (Each participant can bring one guest only)
+                checked={showDetails}
+                onChange={(e) => setShowDetails(e.target.checked)}
+                className="mr-4 checked:bg-gray-500 cursor-pointer"
+              />
+              Additional Guest Details (Each participant can bring one guest only)
             </div>
+            {showDetails && <Details />}
             <div >
               <p className="text-xl font-bold ">BOOK NOW FOR FREE</p>
               <ul className="list-disc pl-4">
@@ -114,7 +126,7 @@ export default function Home() {
               </ul>
               <div className="text-xs py-2 mt-2">Thanks for your interest in Panerai workshop. All sessions are fully booked for now. Please fill in your details and you will be added to waiting list for upcoming sessions. We shall contact you once new sessions are open.</div>
               <select
-                className="w-[1126px] bg-neutral-800 text-white p-1  rounded border border-neutral-700 focus:outline-none focus:border-blue-500"
+                className="w-[1126px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
               >
                 <option value="Mr.">Upcoming new session(waiting list)</option>
                 <option value="Ms.">Landmark Prince's 中環置地太子</option>
