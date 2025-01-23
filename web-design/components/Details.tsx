@@ -1,5 +1,15 @@
 'use client'
-const Details = () => {
+
+interface DetailsProps {
+    guestData: {
+        title: string;
+        firstName: string;
+        lastName: string;
+    };
+    onChange: (e: { target: { name: string, value: string } }) => void;
+}
+
+const Details = ({ guestData, onChange }: DetailsProps) => {
     return (
         <div className="space-y-6">
             <div>
