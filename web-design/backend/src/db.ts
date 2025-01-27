@@ -127,7 +127,9 @@ export const initializeSessionsData = async () => {
     } catch (error) {
         console.error('Sessions 初始化失敗:', error);
     }
+    initializeSessionsData()
 };
+
 
 
 async function initialize() {
