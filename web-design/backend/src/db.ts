@@ -2,12 +2,19 @@ import { Sequelize, DataTypes, Model, ModelStatic } from 'sequelize';
 import { sessionsData } from './sessionsData';
 
 const sequelize = new Sequelize(
-    'PANERAl',
-    'root',
-    '12345678',
+    'lajiao',
+    'postgres',
+    '12341234',
     {
-        host: '127.0.0.1',
-        dialect: 'mysql'
+        host: 'database-1.czuciaio074t.us-east-1.rds.amazonaws.com',
+        dialect: 'postgres',
+        port: 5432,
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        }
     });
 
 interface BookingAttributes {
@@ -124,12 +131,13 @@ export const initializeSessionsData = async () => {
 
 
 async function initialize() {
+
     try {
         await sequelize.sync({ alter: true });
         console.log('資料表已同步');
 
 
-        await initializeSessionsData();
+        // await initializeSessionsData();
     } catch (err) {
         console.error('初始化失敗:', err);
     }

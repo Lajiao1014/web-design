@@ -6,7 +6,7 @@ import { sessions, Booking } from './db';
 const app = express();
 app.use(express.json())
 app.use(cors())
-const port = 3001;
+const port = 3000;
 
 app.post('/bookings', async (req: Request, res: Response) => {
     try {
