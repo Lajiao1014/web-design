@@ -21,22 +21,17 @@ interface BookingAttributes {
     detailTitle: string;
     detailFirstName: string;
     detailLastName: string;
-    userId: number;
     sessionId: number;
-    status: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
     id: {
+
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     },
     sessionId: {
         type: DataTypes.INTEGER,
@@ -45,10 +40,6 @@ const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
             model: 'sessions',
             key: 'id'
         }
-    },
-    status: {
-        type: DataTypes.STRING,
-        allowNull: false
     },
     title: {
         type: DataTypes.STRING,
@@ -110,7 +101,6 @@ const sessions = sequelize.define('sessions', {
     }
 });
 
-// 在模型定義之後，添加關係
 Booking.belongsTo(sessions, {
     foreignKey: 'sessionId',
     as: 'session'
@@ -122,8 +112,8 @@ sessions.hasOne(Booking, {
 });
 
 export const initializeSessionsData = async () => {
+
     try {
-        // 確保 ID 從 1 開始並匹配前端
         await sessions.sync({ force: true });
         await sessions.bulkCreate(sessionsData as any);
         console.log('Sessions 數據初始化成功');
@@ -132,13 +122,13 @@ export const initializeSessionsData = async () => {
     }
 };
 
-// 修改同步順序
+
 async function initialize() {
     try {
         await sequelize.sync({ alter: true });
         console.log('資料表已同步');
 
-        // 在資料表同步後再初始化資料
+
         await initializeSessionsData();
     } catch (err) {
         console.error('初始化失敗:', err);

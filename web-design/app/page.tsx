@@ -1,13 +1,24 @@
 'use client'
 
 import Image from "next/image";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Details from "@/components/Details";
+
+interface Session {
+  id: number;
+  location: string;
+  date: string;
+  time: string;
+  capacity: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function Home() {
 
   const [showDetails, setShowDetails] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false)
+
   const [formData, setFormData] = useState({
     title: 'Mr.',
     firstName: '',
@@ -15,18 +26,19 @@ export default function Home() {
     mobile: '',
     email: '',
     countryCode: 'HK +852',
+    sessionId: '',
     guest: {
       detailTitle: 'Mr.',
       detailFirstName: '',
       detailLastName: ''
     }
-  });
-
+  })
+  const [sessions, setSessions] = useState<Session[]>([]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3001/customers', {
+      const response = await fetch('http://localhost:3001/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,12 +56,12 @@ export default function Home() {
           mobile: '',
           email: '',
           countryCode: 'HK +852',
+          sessionId: '',
           guest: {
             detailTitle: 'Mr.',
             detailFirstName: '',
             detailLastName: ''
           }
-
         });
       } else {
         alert('提交失敗，請稍後再試。');
@@ -61,7 +73,21 @@ export default function Home() {
       setIsSubmitting(false)
     }
   };
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/sessions');
+        if (response.ok) {
+          const data = await response.json();
+          setSessions(data);
+        }
+      } catch (error) {
+        console.error('Error fetching sessions:', error);
+      }
+    };
 
+    fetchSessions();
+  }, []);
 
   const handleInputChange = (e: { target: { name: string, value: string } }) => {
 
@@ -214,24 +240,29 @@ export default function Home() {
                 </ul>
                 <div className="text-xs py-2 mt-2">Thanks for your interest in Panerai workshop. All sessions are fully booked for now. Please fill in your details and you will be added to waiting list for upcoming sessions. We shall contact you once new sessions are open.</div>
                 <select
+                  name="sessionId"
+                  value={formData.sessionId}
+                  onChange={handleInputChange}
                   className="w-[1126px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
                 >
                   <option value="">請選擇時段及地點</option>
                   <optgroup label="觀塘 Kwun Tong">
-                    <option value="1">2月22日 10:00-11:00 - 觀塘</option>
-                    <option value="2">2月22日 11:15-12:15 - 觀塘</option>
-                    <option value="3">2月23日 10:00-11:00 - 觀塘</option>
-                    <option value="4">2月23日 11:15-12:15 - 觀塘</option>
-                    <option value="5">2月24日 10:00-11:00 - 觀塘</option>
-                    <option value="6">2月24日 11:15-12:15 - 觀塘</option>
+                    {/* {sessions
+                      .filter(session => session.location.includes('觀塘'))
+                      .map(session => (
+                        <option key={session.id} value={session.id}>
+                          {`${session.date} ${session.time} ${session.location}`}
+                        </option>
+                      ))} */}
                   </optgroup>
                   <optgroup label="將軍澳 Tseung Kwan O">
-                    <option value="7">2月22日 10:00-11:00 - 將軍澳</option>
-                    <option value="8">2月22日 11:15-12:15 - 將軍澳</option>
-                    <option value="9">2月23日 10:00-11:00 - 將軍澳</option>
-                    <option value="10">2月23日 11:15-12:15 - 將軍澳</option>
-                    <option value="11">2月24日 10:00-11:00 - 將軍澳</option>
-                    <option value="12">2月24日 11:15-12:15 - 將軍澳</option>
+                    {/* {sessions
+                      .filter(session => session.location.includes('將軍澳'))
+                      .map(session => (
+                        <option key={session.id} value={session.id}>
+                          {`${session.date} ${session.time} ${session.location}`}
+                        </option>
+                      ))} */}
                   </optgroup>
                 </select>
               </div>

@@ -2,8 +2,6 @@ import express from 'express';
 import { Request, Response } from 'express';
 import cors from 'cors';
 import { sessions, Booking } from './db';
-import { sessionsData } from './sessionsData';
-import { Session } from 'inspector';
 
 const app = express();
 app.use(express.json())
@@ -15,20 +13,7 @@ app.post('/bookings', async (req: Request, res: Response) => {
         const { sessionid, title, firstName, lastName, mobile, email, countryCode, detailTitle, detailFirstName, detailLastName } = req.body;
 
 
-        const session = await sessions.findOne({
-            where: {
-                id: sessionid,
-                available: true
-            }
-        });
-
-        if (!session) {
-            return res.status(400).json({
-                status: 'error',
-                message: '該時段不可用或不存在'
-            });
-        }
-        const newCustomer = await Booking.create({
+        const newBooking = await Booking.create({
             sessionId: sessionid,
             title,
             firstName: firstName || null,
@@ -39,16 +24,18 @@ app.post('/bookings', async (req: Request, res: Response) => {
             detailTitle,
             detailFirstName,
             detailLastName,
-            status: 'pending',
             id: 1,
-            userId: 1,
-
         })
-        console.log(newCustomer)
+        if (!newBooking) {
+            return res.status(400).json({
+                status: 'error',
+                message: '該時段不可用或不存在'
+            });
+        }
 
         res.json({
             status: 'success',
-            data: newCustomer
+            data: newBooking
         })
     } catch (error: any) {
         res.status(400).json({
@@ -58,11 +45,10 @@ app.post('/bookings', async (req: Request, res: Response) => {
     }
 })
 
-
-
 app.get('/bookings', async (req: Request, res: Response) => {
     try {
         const newCustomer = await Booking.findAll();
+
         res.json({
             status: 'success',
             data: newCustomer
@@ -75,7 +61,15 @@ app.get('/bookings', async (req: Request, res: Response) => {
     }
 });
 
+app.get('/sessions', async (req: Request, res: Response) => {
 
+    const newSessions = await sessions.findAll();
+    console.log(newSessions)
+    res.json({
+        status: 'success',
+        data: newSessions
+    });
+});
 
 
 app.get('/', (req, res) => {
