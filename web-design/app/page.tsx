@@ -14,15 +14,19 @@ export default function Home() {
     lastName: '',
     mobile: '',
     email: '',
-    countryCode: 'HK +852'
+    countryCode: 'HK +852',
+    guest: {
+      detailTitle: 'Mr.',
+      detailFirstName: '',
+      detailLastName: ''
+    }
   });
 
-  // 處理表單提交
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3000/customers', {
+      const response = await fetch('http://localhost:3001/customers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +43,12 @@ export default function Home() {
           lastName: '',
           mobile: '',
           email: '',
-          countryCode: 'HK +852'
+          countryCode: 'HK +852',
+          guest: {
+            detailTitle: 'Mr.',
+            detailFirstName: '',
+            detailLastName: ''
+          }
 
         });
       } else {
@@ -53,14 +62,18 @@ export default function Home() {
     }
   };
 
-  // 處理輸入變更
+
   const handleInputChange = (e: { target: { name: string, value: string } }) => {
 
     const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      guest: {
+        ...prev.guest,
+        [name]: value
+      }
 
     }));
   };
@@ -172,7 +185,7 @@ export default function Home() {
                     E-MAIL 電郵地址 *
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
@@ -189,7 +202,10 @@ export default function Home() {
                 />
                 Additional Guest Details (Each participant can bring one guest only)
               </div>
-              {showDetails && <Details />}
+              {showDetails && <Details
+                guestData={formData.guest}
+                onChange={handleInputChange}
+              />}
               <div >
                 <p className="text-xl font-bold ">BOOK NOW FOR FREE</p>
                 <ul className="list-disc pl-4">
@@ -200,8 +216,23 @@ export default function Home() {
                 <select
                   className="w-[1126px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
                 >
-                  <option value="Mr.">Upcoming new session(waiting list)</option>
-                  <option value="Ms.">Landmark Prince's 中環置地太子</option>
+                  <option value="">請選擇時段及地點</option>
+                  <optgroup label="觀塘 Kwun Tong">
+                    <option value="1">2月22日 10:00-11:00 - 觀塘</option>
+                    <option value="2">2月22日 11:15-12:15 - 觀塘</option>
+                    <option value="3">2月23日 10:00-11:00 - 觀塘</option>
+                    <option value="4">2月23日 11:15-12:15 - 觀塘</option>
+                    <option value="5">2月24日 10:00-11:00 - 觀塘</option>
+                    <option value="6">2月24日 11:15-12:15 - 觀塘</option>
+                  </optgroup>
+                  <optgroup label="將軍澳 Tseung Kwan O">
+                    <option value="7">2月22日 10:00-11:00 - 將軍澳</option>
+                    <option value="8">2月22日 11:15-12:15 - 將軍澳</option>
+                    <option value="9">2月23日 10:00-11:00 - 將軍澳</option>
+                    <option value="10">2月23日 11:15-12:15 - 將軍澳</option>
+                    <option value="tko-feb24-1000">2月24日 10:00-11:00 - 將軍澳</option>
+                    <option value="tko-feb24-1115">2月24日 11:15-12:15 - 將軍澳</option>
+                  </optgroup>
                 </select>
               </div>
               <div className="flex flex-col space-y-4">
@@ -242,7 +273,7 @@ export default function Home() {
                       <input
                         type="radio"
                         id="yes"
-                        name="know_panerai"
+                        name="own_panerai"
                         value="yes"
                         className="mr-2"
                       />
@@ -253,7 +284,7 @@ export default function Home() {
                       <input
                         type="radio"
                         id="no"
-                        name="know_panerai"
+                        name="own_panerai"
                         value="no"
                         className="mr-2"
                       />
@@ -269,7 +300,7 @@ export default function Home() {
                       <input
                         type="radio"
                         id="yes"
-                        name="know_panerai"
+                        name="own_mechanical"
                         value="yes"
                         className="mr-2"
                       />
@@ -280,7 +311,7 @@ export default function Home() {
                       <input
                         type="radio"
                         id="no"
-                        name="know_panerai"
+                        name="own_mechanical"
                         value="no"
                         className="mr-2"
                       />

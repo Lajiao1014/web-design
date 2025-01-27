@@ -2,13 +2,12 @@
 
 interface DetailsProps {
     guestData: {
-        title: string;
-        firstName: string;
-        lastName: string;
+        detailTitle: string;
+        detailFirstName: string;
+        detailLastName: string;
     };
     onChange: (e: { target: { name: string, value: string } }) => void;
 }
-
 const Details = ({ guestData, onChange }: DetailsProps) => {
     return (
         <div className="space-y-6">
@@ -17,6 +16,9 @@ const Details = ({ guestData, onChange }: DetailsProps) => {
                     TITLE 尊稱 *
                 </label>
                 <select
+                    name="detailTitle"
+                    value={guestData.detailTitle}
+                    onChange={onChange}
                     className="w-[550px] bg-neutral-800 text-white p-2 rounded border border-neutral-700 focus:outline-none focus:text-gray-200 hover:bg-neutral-700"
                 >
                     <option value="Mr.">Mr.</option>
@@ -31,7 +33,9 @@ const Details = ({ guestData, onChange }: DetailsProps) => {
                     </label>
                     <input
                         type="text"
-                        name="first_name"
+                        name="detailFirstName"
+                        value={guestData.detailFirstName}
+                        onChange={onChange}
                         className="w-[550px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:border-gray-400"
                     />
                 </div>
@@ -41,7 +45,9 @@ const Details = ({ guestData, onChange }: DetailsProps) => {
                     </label>
                     <input
                         type="text"
-                        name="first_name"
+                        name="detailLastName"
+                        value={guestData.detailLastName}
+                        onChange={onChange}
                         className="w-[550px] bg-neutral-800 text-white p-1 rounded border border-neutral-700 focus:outline-none focus:border-gray-400"
                     />
                 </div>
