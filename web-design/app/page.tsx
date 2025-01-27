@@ -230,8 +230,8 @@ export default function Home() {
                     <option value="8">2月22日 11:15-12:15 - 將軍澳</option>
                     <option value="9">2月23日 10:00-11:00 - 將軍澳</option>
                     <option value="10">2月23日 11:15-12:15 - 將軍澳</option>
-                    <option value="tko-feb24-1000">2月24日 10:00-11:00 - 將軍澳</option>
-                    <option value="tko-feb24-1115">2月24日 11:15-12:15 - 將軍澳</option>
+                    <option value="11">2月24日 10:00-11:00 - 將軍澳</option>
+                    <option value="12">2月24日 11:15-12:15 - 將軍澳</option>
                   </optgroup>
                 </select>
               </div>

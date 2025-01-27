@@ -2,7 +2,8 @@ import express from 'express';
 import { Request, Response } from 'express';
 import cors from 'cors';
 import { sessions, Booking } from './db';
-
+import { sessionsData } from './sessionsData';
+import { Session } from 'inspector';
 
 const app = express();
 app.use(express.json())
@@ -11,9 +12,24 @@ const port = 3001;
 
 app.post('/bookings', async (req: Request, res: Response) => {
     try {
-        const { title, firstName, lastName, mobile, email, countryCode, detailTitle, detailFirstName, detailLastName } = req.body;
+        const { sessionid, title, firstName, lastName, mobile, email, countryCode, detailTitle, detailFirstName, detailLastName } = req.body;
 
+
+        const session = await sessions.findOne({
+            where: {
+                id: sessionid,
+                available: true
+            }
+        });
+
+        if (!session) {
+            return res.status(400).json({
+                status: 'error',
+                message: '該時段不可用或不存在'
+            });
+        }
         const newCustomer = await Booking.create({
+            sessionId: sessionid,
             title,
             firstName: firstName || null,
             lastName: lastName || null,
@@ -26,7 +42,7 @@ app.post('/bookings', async (req: Request, res: Response) => {
             status: 'pending',
             id: 1,
             userId: 1,
-            sessionId: 1
+
         })
         console.log(newCustomer)
 
@@ -42,32 +58,7 @@ app.post('/bookings', async (req: Request, res: Response) => {
     }
 })
 
-app.post('/sessions', async (req: Request, res: Response) => {
 
-
-    try {
-        const { startTime, endTime, data, location } = req.body;
-
-        const newSession = await sessions.findAll({
-
-            where: {
-                startTime,
-                endTime,
-                data,
-                location
-            }
-        })
-        res.json({
-            status: 'success',
-            data: newSession
-        })
-    } catch (error: any) {
-        res.status(400).json({
-            status: 'error',
-            message: error.message
-        })
-    }
-})
 
 app.get('/bookings', async (req: Request, res: Response) => {
     try {

@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes, Model, ModelStatic } from 'sequelize';
+import { sessionsData } from './sessionsData';
 
 const sequelize = new Sequelize(
     'PANERAl',
@@ -41,7 +42,7 @@ const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Sessions',
+            model: 'sessions',
             key: 'id'
         }
     },
@@ -120,9 +121,31 @@ sessions.hasOne(Booking, {
     as: 'booking'
 });
 
-sequelize.sync({ alter: true })
-    .then(() => console.log('資料表已同步'))
-    .catch(err => console.error('同步失敗:', err));
+export const initializeSessionsData = async () => {
+    try {
+        // 確保 ID 從 1 開始並匹配前端
+        await sessions.sync({ force: true });
+        await sessions.bulkCreate(sessionsData as any);
+        console.log('Sessions 數據初始化成功');
+    } catch (error) {
+        console.error('Sessions 初始化失敗:', error);
+    }
+};
+
+// 修改同步順序
+async function initialize() {
+    try {
+        await sequelize.sync({ alter: true });
+        console.log('資料表已同步');
+
+        // 在資料表同步後再初始化資料
+        await initializeSessionsData();
+    } catch (err) {
+        console.error('初始化失敗:', err);
+    }
+}
+
+initialize();
 
 export { sequelize, Booking, sessions };
 
