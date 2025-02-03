@@ -137,9 +137,6 @@ async function initialize() {
     try {
         await sequelize.sync({ alter: true });
         console.log('資料表已同步');
-
-
-        // await initializeSessionsData();
     } catch (err) {
         console.error('初始化失敗:', err);
     }

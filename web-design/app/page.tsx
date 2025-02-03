@@ -34,11 +34,12 @@ export default function Home() {
     }
   })
   const [sessions, setSessions] = useState<Session[]>([]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:3001/bookings', {
+      const response = await fetch('http://localhost:3004/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,13 +75,18 @@ export default function Home() {
     }
   };
   useEffect(() => {
+
     const fetchSessions = async () => {
       try {
-        const response = await fetch('http://localhost:3001/sessions');
+        const response = await fetch('http://localhost:3004/sessions');
+        const data = await response.json();
         if (response.ok) {
-          const data = await response.json();
-          setSessions(data);
+          setSessions(data.data);
+          console.log('sessions:', data.data);
+        } else {
+          console.error('Invalid data format:', data);
         }
+
       } catch (error) {
         console.error('Error fetching sessions:', error);
       }
@@ -247,22 +253,22 @@ export default function Home() {
                 >
                   <option value="">請選擇時段及地點</option>
                   <optgroup label="觀塘 Kwun Tong">
-                    {/* {sessions
+                    {sessions
                       .filter(session => session.location.includes('觀塘'))
                       .map(session => (
                         <option key={session.id} value={session.id}>
                           {`${session.date} ${session.time} ${session.location}`}
                         </option>
-                      ))} */}
+                      ))}
                   </optgroup>
                   <optgroup label="將軍澳 Tseung Kwan O">
-                    {/* {sessions
+                    {sessions
                       .filter(session => session.location.includes('將軍澳'))
                       .map(session => (
                         <option key={session.id} value={session.id}>
                           {`${session.date} ${session.time} ${session.location}`}
                         </option>
-                      ))} */}
+                      ))}
                   </optgroup>
                 </select>
               </div>

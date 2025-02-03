@@ -6,7 +6,7 @@ import { sessions, Booking } from './db';
 const app = express();
 app.use(express.json())
 app.use(cors())
-const port = 3000;
+const port = 3004;
 
 app.post('/bookings', async (req: Request, res: Response) => {
     try {
@@ -62,15 +62,21 @@ app.get('/bookings', async (req: Request, res: Response) => {
 });
 
 app.get('/sessions', async (req: Request, res: Response) => {
+    try {
+        const newSessions = await sessions.findAll();
+        console.log(newSessions)
 
-    const newSessions = await sessions.findAll();
-    console.log(newSessions)
-    res.json({
-        status: 'success',
-        data: newSessions
-    });
+        res.json({
+            status: 'success',
+            data: newSessions
+        });
+    } catch (error: any) {
+        res.json({
+            status: 'error',
+            message: error.message
+        });
+    }
 });
-
 
 app.get('/', (req, res) => {
     res.send('Hello World from TypeScript!');
