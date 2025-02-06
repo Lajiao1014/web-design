@@ -38,6 +38,7 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     try {
       const response = await fetch('http://localhost:3004/bookings', {
         method: 'POST',
@@ -75,7 +76,6 @@ export default function Home() {
     }
   };
   useEffect(() => {
-
     const fetchSessions = async () => {
       try {
         const response = await fetch('http://localhost:3004/sessions');
@@ -83,10 +83,16 @@ export default function Home() {
         if (response.ok) {
           setSessions(data.data);
           console.log('sessions:', data.data);
+
+          if (data.data && data.data.length > 0) {
+            setFormData(prev => ({
+              ...prev,
+              sessionId: data.data[0].id
+            }));
+          }
         } else {
           console.error('Invalid data format:', data);
         }
-
       } catch (error) {
         console.error('Error fetching sessions:', error);
       }
@@ -96,18 +102,23 @@ export default function Home() {
   }, []);
 
   const handleInputChange = (e: { target: { name: string, value: string } }) => {
-
     const { name, value } = e.target;
 
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-      guest: {
-        ...prev.guest,
-        [name]: value
-      }
-
-    }));
+    if (name === 'sessionId') {
+      setFormData(prev => ({
+        ...prev,
+        sessionId: value
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        guest: {
+          ...prev.guest,
+          [name]: value
+        }
+      }));
+    }
   };
 
   return (
@@ -163,6 +174,7 @@ export default function Home() {
                   <label className="block text-gray-500 font-medium mb-2">
                     FIRST NAME 名字 *
                   </label>
+
                   <input
                     type="text"
                     name="firstName"

@@ -28,7 +28,7 @@ interface BookingAttributes {
     detailTitle: string;
     detailFirstName: string;
     detailLastName: string;
-    sessionId: number;
+    // sessionId: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -40,14 +40,14 @@ const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
         primaryKey: true,
         autoIncrement: true
     },
-    sessionId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'sessions',
-            key: 'id'
-        }
-    },
+    // sessionId: {
+    //     type: DataTypes.INTEGER,
+    //     allowNull: false,
+    //     references: {
+    //         model: 'sessions',
+    //         key: 'id'
+    //     }
+    // },
     title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -108,15 +108,15 @@ const sessions = sequelize.define('sessions', {
     }
 });
 
-Booking.belongsTo(sessions, {
-    foreignKey: 'sessionId',
-    as: 'session'
-});
+// Booking.belongsTo(sessions, {
+//     foreignKey: 'sessionId',
+//     as: 'session'
+// });
 
-sessions.hasOne(Booking, {
-    foreignKey: 'sessionId',
-    as: 'booking'
-});
+// sessions.hasOne(Booking, {
+//     foreignKey: 'sessionId',
+//     as: 'booking'
+// });
 
 export const initializeSessionsData = async () => {
 

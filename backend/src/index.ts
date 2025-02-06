@@ -10,11 +10,12 @@ const port = 3004;
 
 app.post('/bookings', async (req: Request, res: Response) => {
     try {
-        const { sessionid, title, firstName, lastName, mobile, email, countryCode, detailTitle, detailFirstName, detailLastName } = req.body;
+        const { title, firstName, lastName, mobile, email, countryCode, detailTitle, detailFirstName, detailLastName } = req.body;
+
 
 
         const newBooking = await Booking.create({
-            sessionId: sessionid,
+
             title,
             firstName: firstName || null,
             lastName: lastName || null,
@@ -35,7 +36,8 @@ app.post('/bookings', async (req: Request, res: Response) => {
 
         res.json({
             status: 'success',
-            data: newBooking
+            data: newBooking,
+
         })
     } catch (error: any) {
         res.status(400).json({
@@ -47,11 +49,17 @@ app.post('/bookings', async (req: Request, res: Response) => {
 
 app.get('/bookings', async (req: Request, res: Response) => {
     try {
-        const newCustomer = await Booking.findAll();
+
+        const newBookings = await Booking.findAll({
+            include: [{
+                model: sessions,
+                as: 'session'
+            }]
+        })
 
         res.json({
             status: 'success',
-            data: newCustomer
+            data: newBookings
         });
     } catch (error: any) {
         res.json({
