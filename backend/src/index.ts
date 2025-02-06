@@ -50,12 +50,7 @@ app.post('/bookings', async (req: Request, res: Response) => {
 app.get('/bookings', async (req: Request, res: Response) => {
     try {
 
-        const newBookings = await Booking.findAll({
-            include: [{
-                model: sessions,
-                as: 'session'
-            }]
-        })
+        const newBookings = await Booking.findAll();
 
         res.json({
             status: 'success',

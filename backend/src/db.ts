@@ -17,6 +17,18 @@ const sequelize = new Sequelize(
         }
     });
 
+async function testConnection() {
+    try {
+        await sequelize.authenticate();
+        console.log('數據庫連接成功！');
+    } catch (error) {
+        console.error('無法連接到數據庫:', error);
+    }
+}
+
+testConnection();
+
+
 interface BookingAttributes {
     id: number;
     title: string;
@@ -28,14 +40,12 @@ interface BookingAttributes {
     detailTitle: string;
     detailFirstName: string;
     detailLastName: string;
-    // sessionId: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
     id: {
-
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -72,7 +82,6 @@ const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    //Details Customer
     detailTitle: {
         type: DataTypes.STRING,
     },
@@ -84,10 +93,12 @@ const Booking = sequelize.define<Model<BookingAttributes>>('Booking', {
     }
 });
 
+
 const sessions = sequelize.define('sessions', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
     },
     location: {
@@ -108,14 +119,17 @@ const sessions = sequelize.define('sessions', {
     }
 });
 
+Booking.belongsTo(sessions, { as: 'session' });
+sessions.hasMany(Booking);
+
 // Booking.belongsTo(sessions, {
 //     foreignKey: 'sessionId',
 //     as: 'session'
 // });
 
-// sessions.hasOne(Booking, {
+// sessions.hasMany(Booking, {
 //     foreignKey: 'sessionId',
-//     as: 'booking'
+//     as: 'bookings'
 // });
 
 export const initializeSessionsData = async () => {
@@ -127,10 +141,9 @@ export const initializeSessionsData = async () => {
     } catch (error) {
         console.error('Sessions 初始化失敗:', error);
     }
-    initializeSessionsData()
+
 };
-
-
+initializeSessionsData()
 
 async function initialize() {
 
@@ -145,4 +158,3 @@ async function initialize() {
 initialize();
 
 export { sequelize, Booking, sessions };
-
